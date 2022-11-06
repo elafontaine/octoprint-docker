@@ -6,10 +6,32 @@ if [ -n "$MJPEG_STREAMER_INPUT" ]; then
   MJPG_STREAMER_INPUT=$MJPEG_STREAMER_INPUT
 fi
 
-if ! expr "$MJPG_STREAMER_INPUT" : ".*\.so.*" > /dev/null; then
-  MJPG_STREAMER_INPUT="input_uvc.so $MJPG_STREAMER_INPUT"
+function start_mjpg_streamer {
+  if ! expr "$1" : ".*\.so.*" > /dev/null; then
+    INPUT="input_uvc.so $1"
+  else
+    INPUT="$1"
+  fi
+
+  echo mjpg_streamer \
+  -i "/usr/local/lib/mjpg-streamer/$INPUT" -d "$2" \
+  -o "/usr/local/lib/mjpg-streamer/output_http.so" -w "/usr/local/share/mjpg-streamer/www" -p "$3" 
+}
+
+
+
+if [ -n "$MJPG_STREAMER_INPUT_3" ] ; then  
+    $(start_mjpg_streamer "$MJPG_STREAMER_INPUT_3" "$CAMERA_DEV_3" 8082) &
 fi
 
-exec mjpg_streamer \
-  -i "/usr/local/lib/mjpg-streamer/$MJPG_STREAMER_INPUT -d $CAMERA_DEV" \
-  -o "/usr/local/lib/mjpg-streamer/output_http.so -w /usr/local/share/mjpg-streamer/www -p 8080"
+if [ -n "$MJPG_STREAMER_INPUT_2" ] ; then  
+    $(start_mjpg_streamer "$MJPG_STREAMER_INPUT_2" "$CAMERA_DEV_2" 8081) &
+fi
+
+# alias for single camera setup
+if [ -n "$CAMERA_DEV" ]; then
+    CAMERA_DEV_1="$CAMERA_DEV"
+    MJPG_STREAMER_INPUT_1="$MJPG_STREAMER_INPUT"
+fi
+
+exec $(start_mjpg_streamer "$MJPG_STREAMER_INPUT_1" "$CAMERA_DEV_1" 8080)
