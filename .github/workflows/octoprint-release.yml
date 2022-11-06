@@ -23,7 +23,7 @@ jobs:
   # should not publish the 'latest' tag unless the given tag from payload is 
   # equal to the latest (stable) release tag of octoprint
   release_main_on_dispatch:
-    if: github.event_name == 'repository_dispatch' && github.repository_owner == 'OctoPrint'
+    if: github.event_name == 'repository_dispatch' && github.repository_owner == 'elafontaine'
     needs: meta
 
     runs-on: ubuntu-latest
@@ -74,7 +74,7 @@ jobs:
         id: tagging
         uses: HackerHappyHour/tagging-strategy@v3
         with:
-          image_name: octoprint/octoprint
+          image_name: erlafont/octoprint
           tag_name: ${{ github.event.client_payload.tag_name }}
           tags: |
             %X%::${{ steps.buildxy.outputs.buildxy }}
@@ -91,7 +91,7 @@ jobs:
         name: Login to DockerHub
         uses: docker/login-action@v1
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
+          username: erlafont
           password: ${{ secrets.DOCKER_TOKEN }}
 
       - name: Build and Deploy
@@ -110,7 +110,7 @@ jobs:
           labels: ${{ needs.meta.outputs.labels }}
 
   release_minimal_on_dispatch:
-    if: github.event_name == 'repository_dispatch' && github.repository_owner == 'OctoPrint'
+    if: github.event_name == 'repository_dispatch' && github.repository_owner == 'elafontaine'
     needs: meta
 
     runs-on: ubuntu-latest
@@ -123,7 +123,7 @@ jobs:
         id: latest-octoprint
         uses: pozetroninc/github-action-get-latest-release@master
         with:
-          owner: OctoPrint
+          owner: erlafont
           repo: OctoPrint
           excludes: draft
       - 
@@ -131,7 +131,7 @@ jobs:
         id: stable-octoprint
         uses: pozetroninc/github-action-get-latest-release@master
         with:
-          owner: OctoPrint
+          owner: erlafont
           repo: OctoPrint
           excludes: prerelease,draft
       - 
@@ -161,7 +161,7 @@ jobs:
         id: tagging
         uses: HackerHappyHour/tagging-strategy@v3
         with:
-          image_name: octoprint/octoprint
+          image_name: erlafont/octoprint
           tag_name: ${{ github.event.client_payload.tag_name }}
           tags: |
             %X%-minimal::${{ steps.buildxy.outputs.buildxy }}
@@ -218,7 +218,6 @@ jobs:
   # ensures this will not run on the dispatch event, or when non-relevant files
   # are changed (such as documentation or build/workflow scripts)
   release_main_on_push:
-    if: needs.push_filters.outputs.main == 'true' && github.event_name == 'push' && github.repository_owner == 'OctoPrint'
     needs: [meta, push_filters]
 
     runs-on: ubuntu-latest
@@ -232,7 +231,7 @@ jobs:
         id: stable-octoprint
         uses: pozetroninc/github-action-get-latest-release@master
         with:
-          owner: OctoPrint
+          owner: Octoprint
           repo: OctoPrint
           excludes: prerelease,draft
 
@@ -241,7 +240,7 @@ jobs:
         id: latest-octoprint
         uses: pozetroninc/github-action-get-latest-release@master
         with:
-          owner: OctoPrint
+          owner: Octoprint
           repo: OctoPrint
           excludes: draft
       -
@@ -266,7 +265,7 @@ jobs:
         id: tagging
         uses: HackerHappyHour/tagging-strategy@v3
         with:
-          image_name: octoprint/octoprint
+          image_name: erlafont/octoprint
           tag_name: ${{ steps.stable-octoprint.outputs.release }}
           tags: |
             %X%
@@ -279,7 +278,7 @@ jobs:
         name: Login to DockerHub
         uses: docker/login-action@v1
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
+          username: erlafont
           password: ${{ secrets.DOCKER_TOKEN }}
 
       - 
@@ -300,7 +299,7 @@ jobs:
           labels: ${{ needs.meta.outputs.labels }}
 
   release_minimal_on_push:
-    if: needs.push_filters.outputs.minimal == 'true' && github.event_name == 'push' && github.repository_owner == 'OctoPrint'
+    if: needs.push_filters.outputs.minimal == 'true' && github.event_name == 'push' && github.repository_owner == 'elafontaine'
     needs: [meta, push_filters]
 
     runs-on: ubuntu-latest
@@ -314,7 +313,7 @@ jobs:
         id: stable-octoprint
         uses: pozetroninc/github-action-get-latest-release@master
         with:
-          owner: OctoPrint
+          owner: erlafont
           repo: OctoPrint
           excludes: prerelease,draft
 
@@ -323,7 +322,7 @@ jobs:
         id: latest-octoprint
         uses: pozetroninc/github-action-get-latest-release@master
         with:
-          owner: OctoPrint
+          owner: erlafont
           repo: OctoPrint
           excludes: draft
       -
@@ -348,7 +347,7 @@ jobs:
         id: tagging
         uses: HackerHappyHour/tagging-strategy@v3
         with:
-          image_name: octoprint/octoprint
+          image_name: elafontaine/octoprint
           tag_name: ${{ steps.stable-octoprint.outputs.release }}
           tags: |
             %X%-minimal
