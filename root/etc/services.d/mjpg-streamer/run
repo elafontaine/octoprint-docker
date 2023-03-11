@@ -21,11 +21,11 @@ function start_mjpg_streamer {
 
 
 if [ -n "$MJPG_STREAMER_INPUT_3" ] ; then  
-    $(start_mjpg_streamer "$MJPG_STREAMER_INPUT_3" "$CAMERA_DEV_3" 8082) &
+    exec $(start_mjpg_streamer "$MJPG_STREAMER_INPUT_3" "$CAMERA_DEV_3" 8082) &
 fi
 
 if [ -n "$MJPG_STREAMER_INPUT_2" ] ; then  
-    $(start_mjpg_streamer "$MJPG_STREAMER_INPUT_2" "$CAMERA_DEV_2" 8081) &
+    exec $(start_mjpg_streamer "$MJPG_STREAMER_INPUT_2" "$CAMERA_DEV_2" 8081) &
 fi
 
 # alias for single camera setup
